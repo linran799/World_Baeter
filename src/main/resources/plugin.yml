@@ -1,0 +1,5 @@
+name: World Baeter
+version: '1.0-SNAPSHOT'
+main: aorg.example.worldBaeter.WorldBaeter
+api-version: '1.21'
+authors: [ lin ]
