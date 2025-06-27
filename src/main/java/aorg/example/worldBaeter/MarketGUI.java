@@ -1,10 +1,8 @@
 package aorg.example.worldBaeter;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 
 public class MarketGUI {
-    private static final String GUI_TITLE = "§6§l交易市场";
+    static final String GUI_TITLE = "§6§l交易市场";
     private static final int GUI_SIZE = 54; // 大箱子大小
 
     // 创建新的市场界面
