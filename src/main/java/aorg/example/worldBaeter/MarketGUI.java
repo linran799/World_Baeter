@@ -55,7 +55,7 @@ public class MarketGUI {
         for (TradeManager.Trade trade : trades) {
             if (slotIndex >= 44) break;
 
-            // 安全克隆物品，防止NBT错误
+            // 安全克隆物品
             ItemStack displayItem = safeClone(trade.getRequiredItem());
             if (displayItem == null) {
                 displayItem = new ItemStack(Material.BARRIER);

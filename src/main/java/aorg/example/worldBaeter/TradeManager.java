@@ -1,66 +1,135 @@
 package aorg.example.worldBaeter;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
-public class TradeStep2GUI {
-    public static final String GUI_TITLE = ChatColor.GREEN + "设置报酬";
-    public static final int CONFIRM_SLOT = 53;
-    public static final int REQUIRED_SLOT = 45;
-    public static final int INFO_SLOT = 49;
-
-    public static Inventory createTradeStep2GUI(List<ItemStack> requiredItems) {
-        Inventory inv = Bukkit.createInventory(null, 54, GUI_TITLE);
-
-        // 填充背景
-        ItemStack background = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
-        for (int i = 0; i < 54; i++) {
-            // 确认按钮位置留空
-            if (i != CONFIRM_SLOT && i != INFO_SLOT) {
-                inv.setItem(i, background);
-            }
-        }
-
-        // 显示所需物品
-        int slot = REQUIRED_SLOT;
-        for (ItemStack item : requiredItems) {
-            if (slot >= 54) break;
-            inv.setItem(slot, item);
-            slot++;
-        }
-
-        // 添加说明
-        inv.setItem(INFO_SLOT, createGuiItem(Material.BOOK, ChatColor.YELLOW + "设置报酬",
-                ChatColor.GRAY + "1. 在下方放入报酬物品",
-                ChatColor.GRAY + "2. 可以放入多个物品",
-                ChatColor.GRAY + "3. 点击右侧绿宝石完成",
-                "",
-                ChatColor.RED + "注意: 发布交易会立即收取报酬物品!"
-        ));
-
-        // 添加确认按钮
-        inv.setItem(CONFIRM_SLOT, createGuiItem(Material.EMERALD_BLOCK,
-                ChatColor.GREEN + "发布交易"));
-
-        return inv;
+public class TradeManager {
+    static {
+        ConfigurationSerialization.registerClass(Trade.class);
     }
 
-    public static ItemStack createGuiItem(Material material, String name, String... lore) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(name);
-            if (lore.length > 0) {
-                meta.setLore(Arrays.asList(lore));
-            }
-            item.setItemMeta(meta);
+    private final WorldBaeter plugin;
+    private final List<Trade> trades = new ArrayList<>();
+    private File tradeFile;
+
+    public TradeManager(WorldBaeter plugin) {
+        this.plugin = plugin;
+        loadTrades();
+    }
+
+    public static class Trade implements ConfigurationSerializable {
+        private final UUID creator;
+        private final ItemStack requiredItem;
+        private final ItemStack rewardItem;
+
+        public Trade(UUID creator, ItemStack requiredItem, ItemStack rewardItem) {
+            this.creator = creator;
+            this.requiredItem = requiredItem;
+            this.rewardItem = rewardItem;
         }
-        return item;
+
+        public Trade(Map<String, Object> map) {
+            this.creator = UUID.fromString((String) map.get("creator"));
+            this.requiredItem = deserializeItemStack((Map<String, Object>) map.get("requiredItem"));
+            this.rewardItem = deserializeItemStack((Map<String, Object>) map.get("rewardItem"));
+        }
+
+        private ItemStack deserializeItemStack(Map<String, Object> data) {
+            if (data == null || data.isEmpty()) {
+                return new ItemStack(Material.STONE);
+            }
+            try {
+                return ItemStack.deserialize(data);
+            } catch (Exception e) {
+                return new ItemStack(Material.STONE);
+            }
+        }
+
+        @Override
+        public Map<String, Object> serialize() {
+            Map<String, Object> map = new HashMap<>();
+            map.put("creator", creator.toString());
+            map.put("requiredItem", requiredItem != null ? requiredItem.serialize() : new HashMap<>());
+            map.put("rewardItem", rewardItem != null ? rewardItem.serialize() : new HashMap<>());
+            return map;
+        }
+
+        public UUID getCreator() {
+            return creator;
+        }
+
+        public ItemStack getRequiredItem() {
+            return requiredItem;
+        }
+
+        public ItemStack getRewardItem() {
+            return rewardItem;
+        }
+    }
+
+    private void loadTrades() {
+        if (!plugin.getDataFolder().exists()) {
+            plugin.getDataFolder().mkdirs();
+        }
+
+        tradeFile = new File(plugin.getDataFolder(), "trades.yml");
+        if (!tradeFile.exists()) {
+            try {
+                tradeFile.createNewFile();
+            } catch (IOException e) {
+                plugin.getLogger().severe("无法创建交易数据文件: " + e.getMessage());
+            }
+            return;
+        }
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(tradeFile);
+        if (config.contains("trades")) {
+            List<?> tradeList = config.getList("trades");
+            if (tradeList != null) {
+                for (Object obj : tradeList) {
+                    if (obj instanceof Trade) {
+                        trades.add((Trade) obj);
+                    } else {
+                        plugin.getLogger().warning("发现无效的交易数据: " + obj);
+                    }
+                }
+            }
+        }
+        plugin.getLogger().info("已加载 " + trades.size() + " 个交易");
+    }
+
+    public void saveTrades() {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("trades", trades);
+
+        try {
+            config.save(tradeFile);
+            plugin.getLogger().info("已保存 " + trades.size() + " 个交易");
+        } catch (IOException e) {
+            plugin.getLogger().severe("无法保存交易数据: " + e.getMessage());
+        }
+    }
+
+    public void addTrade(Trade trade) {
+        trades.add(trade);
+        saveTrades();
+    }
+
+    public boolean removeTrade(Trade trade) {
+        boolean result = trades.remove(trade);
+        if (result) {
+            saveTrades();
+        }
+        return result;
+    }
+
+    public List<Trade> getTrades() {
+        return new ArrayList<>(trades);
     }
 }
