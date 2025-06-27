@@ -7,11 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TradeManager {
     static {
@@ -27,30 +23,29 @@ public class TradeManager {
         loadTrades();
     }
 
-    // 交易数据结构
-    public static class Trade implements org.bukkit.configuration.serialization.ConfigurationSerializable {
+    public static class Trade implements java.util.Map<String, Object> {
         private final UUID creator;
-        private final ItemStack offerItem;
-        private final ItemStack priceItem;
+        private final ItemStack requiredItem;
+        private final ItemStack rewardItem;
 
-        public Trade(UUID creator, ItemStack offerItem, ItemStack priceItem) {
+        public Trade(UUID creator, ItemStack requiredItem, ItemStack rewardItem) {
             this.creator = creator;
-            this.offerItem = offerItem;
-            this.priceItem = priceItem;
+            this.requiredItem = requiredItem;
+            this.rewardItem = rewardItem;
         }
 
         public Trade(Map<String, Object> map) {
             this.creator = UUID.fromString((String) map.get("creator"));
-            this.offerItem = (ItemStack) map.get("offerItem");
-            this.priceItem = (ItemStack) map.get("priceItem");
+            this.requiredItem = (ItemStack) map.get("requiredItem");
+            this.rewardItem = (ItemStack) map.get("rewardItem");
         }
 
         @Override
         public Map<String, Object> serialize() {
             Map<String, Object> map = new HashMap<>();
             map.put("creator", creator.toString());
-            map.put("offerItem", offerItem);
-            map.put("priceItem", priceItem);
+            map.put("requiredItem", requiredItem);
+            map.put("rewardItem", rewardItem);
             return map;
         }
 
@@ -58,17 +53,16 @@ public class TradeManager {
             return creator;
         }
 
-        public ItemStack getOfferItem() {
-            return offerItem;
+        public ItemStack getRequiredItem() {
+            return requiredItem;
         }
 
-        public ItemStack getPriceItem() {
-            return priceItem;
+        public ItemStack getRewardItem() {
+            return rewardItem;
         }
     }
 
     private void loadTrades() {
-        // 确保数据文件夹存在
         if (!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdirs();
         }
