@@ -7,4 +7,10 @@ commands:
   market:
     description: 打开交易市场
     usage: /market
-
+  addtrade:
+    description: 发布一个新交易
+    usage: /addtrade
+permissions:
+  worldbaeter.market.add:
+    description: 允许玩家在交易市场发布新交易
+    default: true
