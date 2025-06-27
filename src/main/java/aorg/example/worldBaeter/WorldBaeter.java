@@ -44,6 +44,16 @@ import org.bukkit.plugin.java.JavaPlugin;
                 return false;
             }
         }
+
+        @Override
+        public void onEnable() {
+            getLogger().info("交易市场插件已启用!");
+            // 注册命令
+            getCommand("market").setExecutor(this);
+
+            // 注册事件监听器
+            getServer().getPluginManager().registerEvents(new MarketListener(), this);
+        }
         //wishtoday238's code
     }
 

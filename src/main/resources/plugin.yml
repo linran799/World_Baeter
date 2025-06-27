@@ -3,3 +3,8 @@ version: '1.0-SNAPSHOT'
 main: aorg.example.worldBaeter.WorldBaeter
 api-version: '1.21'
 authors: [ lin ]
+commands:
+  market:
+    description: 打开交易市场
+    usage: /market
+
