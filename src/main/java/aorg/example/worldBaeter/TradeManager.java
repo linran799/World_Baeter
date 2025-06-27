@@ -2,6 +2,7 @@ package aorg.example.worldBaeter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,7 +24,7 @@ public class TradeManager {
         loadTrades();
     }
 
-    public static class Trade implements java.util.Map<String, Object> {
+    public static class Trade implements ConfigurationSerializable {
         private final UUID creator;
         private final ItemStack requiredItem;
         private final ItemStack rewardItem;
