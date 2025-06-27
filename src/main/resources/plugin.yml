@@ -1,4 +1,4 @@
-name: World Baeter
+name: world_baeter
 version: '1.0-SNAPSHOT'
 main: aorg.example.worldBaeter.WorldBaeter
 api-version: '1.21'
