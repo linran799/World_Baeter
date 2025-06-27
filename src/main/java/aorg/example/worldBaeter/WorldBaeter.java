@@ -8,6 +8,7 @@ public final class WorldBaeter extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
 
+        //wishtoday238's code
     }
 
     @Override
