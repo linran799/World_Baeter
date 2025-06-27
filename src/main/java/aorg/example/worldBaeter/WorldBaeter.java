@@ -12,13 +12,13 @@ public class WorldBaeter extends JavaPlugin {
     public void onEnable() {
         // 注册命令
         getCommand("market").setExecutor(this);
-
         // 注册事件监听器
         getServer().getPluginManager().registerEvents(new MarketListener(), this);
     }
 
     @Override
     public void onDisable() {
+        //hello
     }
 
     @Override
