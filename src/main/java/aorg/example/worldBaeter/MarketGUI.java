@@ -7,7 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,14 +55,24 @@ public class MarketGUI {
         for (TradeManager.Trade trade : trades) {
             if (slotIndex >= 44) break;
 
-            ItemStack displayItem = trade.getRequiredItem().clone();
-            ItemMeta meta = displayItem.getItemMeta();
+            // 安全克隆物品，防止NBT错误
+            ItemStack displayItem = safeClone(trade.getRequiredItem());
+            if (displayItem == null) {
+                displayItem = new ItemStack(Material.BARRIER);
+                ItemMeta meta = displayItem.getItemMeta();
+                meta.setDisplayName(ChatColor.RED + "无效交易");
+                displayItem.setItemMeta(meta);
+            }
 
+            ItemMeta meta = displayItem.getItemMeta();
             if (meta != null) {
                 List<String> lore = new ArrayList<>();
-                lore.add(ChatColor.GRAY + "报酬: " +
-                        trade.getRewardItem().getAmount() + "x " +
-                        getItemName(trade.getRewardItem()));
+
+                if (trade.getRewardItem() != null) {
+                    lore.add(ChatColor.GRAY + "报酬: " +
+                            trade.getRewardItem().getAmount() + "x " +
+                            getItemName(trade.getRewardItem()));
+                }
 
                 OfflinePlayer creator = Bukkit.getOfflinePlayer(trade.getCreator());
                 if (creator.getName() != null) {
@@ -81,6 +90,15 @@ public class MarketGUI {
             slotIndex++;
 
             if (slotIndex % 9 == 8) slotIndex += 2;
+        }
+    }
+
+    private static ItemStack safeClone(ItemStack original) {
+        if (original == null) return null;
+        try {
+            return original.clone();
+        } catch (Exception e) {
+            return new ItemStack(original.getType(), original.getAmount());
         }
     }
 

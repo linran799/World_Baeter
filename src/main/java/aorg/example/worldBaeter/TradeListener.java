@@ -49,14 +49,16 @@ public class TradeListener implements Listener {
     }
 
     private void handleTradeStep1Click(InventoryClickEvent event) {
-        // 允许玩家在界面中放置物品
-        if (event.getRawSlot() < 45) {
-            event.setCancelled(false);
+        // 只允许玩家在内容区域操作
+        if (event.getRawSlot() < 0 || event.getRawSlot() >= 45) {
+            event.setCancelled(true);
             return;
         }
 
-        // 确认按钮点击
+        // 玩家点击了确认按钮
         if (event.getRawSlot() == TradeStep1GUI.CONFIRM_SLOT) {
+            event.setCancelled(true);
+
             Player player = (Player) event.getWhoClicked();
             Inventory inv = event.getInventory();
 
@@ -79,18 +81,24 @@ public class TradeListener implements Listener {
 
             // 打开第二步界面
             player.openInventory(TradeStep2GUI.createTradeStep2GUI(requiredItems));
+        } else {
+            // 允许在内容区域自由操作
+            event.setCancelled(false);
         }
     }
 
     private void handleTradeStep2Click(InventoryClickEvent event) {
-        // 允许玩家在界面中放置物品
-        if (event.getRawSlot() >= 9 && event.getRawSlot() < 45) {
-            event.setCancelled(false);
+        // 只允许玩家在内容区域操作
+        int slot = event.getRawSlot();
+        if (slot < 0 || slot >= 45) {
+            event.setCancelled(true);
             return;
         }
 
-        // 确认按钮点击
-        if (event.getRawSlot() == TradeStep2GUI.CONFIRM_SLOT) {
+        // 玩家点击了确认按钮
+        if (slot == TradeStep2GUI.CONFIRM_SLOT) {
+            event.setCancelled(true);
+
             Player player = (Player) event.getWhoClicked();
             UUID playerId = player.getUniqueId();
 
@@ -104,8 +112,8 @@ public class TradeListener implements Listener {
             Inventory inv = event.getInventory();
             List<ItemStack> rewardItems = new ArrayList<>();
 
-            // 收集报酬物品 (槽位 9-44)
-            for (int i = 9; i < 45; i++) {
+            // 收集报酬物品 (槽位 0-44)
+            for (int i = 0; i < 45; i++) {
                 ItemStack item = inv.getItem(i);
                 if (item != null && item.getType() != Material.AIR) {
                     rewardItems.add(item.clone());
@@ -131,7 +139,7 @@ public class TradeListener implements Listener {
                 player.getInventory().removeItem(reward);
             }
 
-            // 创建交易（简化：只使用第一个所需物品和第一个报酬物品）
+            // 创建交易（使用第一个所需物品和第一个报酬物品）
             TradeManager.Trade trade = new TradeManager.Trade(
                     playerId,
                     requiredItems.get(0).clone(),
@@ -144,6 +152,9 @@ public class TradeListener implements Listener {
             player.sendMessage(ChatColor.GREEN + "交易发布成功!");
             player.closeInventory();
             tradeInProgress.remove(playerId);
+        } else {
+            // 允许在内容区域自由操作
+            event.setCancelled(false);
         }
     }
 
@@ -253,9 +264,10 @@ public class TradeListener implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+
         // 第一步界面关闭处理
         if (event.getView().getTitle().equals(TradeStep1GUI.GUI_TITLE)) {
-            Player player = (Player) event.getPlayer();
             Inventory inv = event.getInventory();
 
             // 返还所有物品
@@ -271,11 +283,10 @@ public class TradeListener implements Listener {
 
         // 第二步界面关闭处理
         else if (event.getView().getTitle().equals(TradeStep2GUI.GUI_TITLE)) {
-            Player player = (Player) event.getPlayer();
             Inventory inv = event.getInventory();
 
             // 返还报酬物品
-            for (int i = 9; i < 45; i++) {
+            for (int i = 0; i < 45; i++) {
                 ItemStack item = inv.getItem(i);
                 if (item != null && item.getType() != Material.AIR) {
                     player.getInventory().addItem(item);
@@ -295,7 +306,8 @@ public class TradeListener implements Listener {
 
     private TradeManager.Trade findTradeByDisplayItem(ItemStack displayItem) {
         for (TradeManager.Trade trade : tradeManager.getTrades()) {
-            if (trade.getRequiredItem().isSimilar(displayItem)) {
+            if (trade.getRequiredItem() != null &&
+                    trade.getRequiredItem().isSimilar(displayItem)) {
                 return trade;
             }
         }

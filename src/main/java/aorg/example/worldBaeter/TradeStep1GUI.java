@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import java.util.Arrays;
 
 public class TradeStep1GUI {
@@ -20,14 +19,19 @@ public class TradeStep1GUI {
         // 填充背景
         ItemStack background = createGuiItem(Material.GRAY_STAINED_GLASS_PANE, " ");
         for (int i = 0; i < 54; i++) {
-            inv.setItem(i, background);
+            // 确认按钮位置留空
+            if (i != CONFIRM_SLOT && i != INFO_SLOT) {
+                inv.setItem(i, background);
+            }
         }
 
         // 添加说明
         inv.setItem(INFO_SLOT, createGuiItem(Material.BOOK, ChatColor.YELLOW + "设置所需物品",
                 ChatColor.GRAY + "1. 在下方放入你需要的物品",
                 ChatColor.GRAY + "2. 可以放入多个物品",
-                ChatColor.GRAY + "3. 点击右侧绿宝石继续"
+                ChatColor.GRAY + "3. 点击右侧绿宝石继续",
+                "",
+                ChatColor.GREEN + "注意: 不需要拥有这些物品，只需指定类型"
         ));
 
         // 添加确认按钮
