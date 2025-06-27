@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MarketGUI {
-    private static final String GUI_TITLE = "§6§l交易市场";
+    public static final String GUI_TITLE = "§6§l交易市场"; // 改为public
     private static final int GUI_SIZE = 54; // 大箱子大小
 
     // 创建新的市场界面
@@ -92,7 +92,8 @@ public class MarketGUI {
         }
     }
 
-    private static String getItemName(ItemStack item) {
+    // 改为public访问权限
+    public static String getItemName(ItemStack item) {
         if (item == null) return "未知物品";
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             return item.getItemMeta().getDisplayName();

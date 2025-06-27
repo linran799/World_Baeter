@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TradeManager {
     static {
@@ -37,15 +39,15 @@ public class TradeManager {
             this.priceItem = priceItem;
         }
 
-        public Trade(java.util.Map<String, Object> map) {
+        public Trade(Map<String, Object> map) {
             this.creator = UUID.fromString((String) map.get("creator"));
             this.offerItem = (ItemStack) map.get("offerItem");
             this.priceItem = (ItemStack) map.get("priceItem");
         }
 
         @Override
-        public java.util.Map<String, Object> serialize() {
-            java.util.Map<String, Object> map = new java.util.HashMap<>();
+        public Map<String, Object> serialize() {
+            Map<String, Object> map = new HashMap<>();
             map.put("creator", creator.toString());
             map.put("offerItem", offerItem);
             map.put("priceItem", priceItem);

@@ -1,6 +1,7 @@
 package aorg.example.worldBaeter;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material; // 添加Material导入
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

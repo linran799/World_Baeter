@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3165e401-0acb-4def-8326-a7adc859162b" name="更改" comment="1">
-      <change afterPath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/TradeCreationGUI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/TradeManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/MarketGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/MarketGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/MarketListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/MarketListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/WorldBaeter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/WorldBaeter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/TradeManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aorg/example/worldBaeter/TradeManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751021114889</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="1">
+      <option name="closed" value="true" />
+      <created>1751025811673</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1751025811673</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
