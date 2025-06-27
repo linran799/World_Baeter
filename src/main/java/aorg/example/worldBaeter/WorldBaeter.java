@@ -10,7 +10,6 @@ public class WorldBaeter extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("交易市场插件已启用!");
         // 注册命令
         getCommand("market").setExecutor(this);
 
@@ -20,7 +19,6 @@ public class WorldBaeter extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("交易市场插件已禁用");
     }
 
     @Override
